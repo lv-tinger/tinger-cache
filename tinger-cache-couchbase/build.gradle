@@ -1,0 +1,3 @@
+dependencies {
+    implementation "com.couchbase.client:java-client:${couch_version}"
+}

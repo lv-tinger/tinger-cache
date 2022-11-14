@@ -1,0 +1,58 @@
+plugins {
+    id 'java'
+}
+
+group 'org.tinger'
+version '1.0-SNAPSHOT'
+
+def getRepositoryUrl() {
+    return isSnapshot() ? SNAPSHOT_REPOSITORY_URL : RELEASE_REPOSITORY_URL
+}
+
+def isSnapshot() {
+    return version.endsWith("SNAPSHOT")
+}
+
+subprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+
+    group 'org.tinger'
+    version '1.0-SNAPSHOT'
+
+    repositories {
+        maven {
+            allowInsecureProtocol = true
+            url 'http://localhost:10001/repository/maven-tinger/'
+        }
+        mavenCentral()
+    }
+
+    dependencies {
+        implementation "org.tinger:tinger-core:${tinger_version}"
+        implementation "org.tinger:tinger-common:${tinger_version}"
+    }
+
+    task sourceJar(type: Jar) {
+        from sourceSets.main.allSource
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
+        repositories {
+            maven {
+                allowInsecureProtocol = true
+                url = getRepositoryUrl()
+                credentials {
+                    username = "${NEXUS_USERNAME}"
+                    password = "${NEXUS_PASSWORD}"
+                }
+            }
+        }
+    }
+}
