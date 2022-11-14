@@ -5,6 +5,10 @@ plugins {
 group 'org.tinger'
 version '1.0-SNAPSHOT'
 
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+
 def getRepositoryUrl() {
     return isSnapshot() ? SNAPSHOT_REPOSITORY_URL : RELEASE_REPOSITORY_URL
 }
@@ -21,6 +25,9 @@ subprojects {
     group 'org.tinger'
     version '1.0-SNAPSHOT'
 
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+
     repositories {
         maven {
             allowInsecureProtocol = true
@@ -36,6 +43,10 @@ subprojects {
 
     task sourceJar(type: Jar) {
         from sourceSets.main.allSource
+    }
+
+    java {
+        withSourcesJar()
     }
 
     publishing {

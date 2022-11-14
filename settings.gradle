@@ -1,8 +1,3 @@
 rootProject.name = 'tinger-cache'
 
-include ':tinger-cache-core'
 include ':tinger-cache-couchbase'
-include ':tinger-cache-redis'
-include ':tinger-cache-memcached'
-include ':tinger-cache-caffeine'
-include ':tinger-cache-ehcache'

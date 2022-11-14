@@ -1,29 +1,20 @@
 package org.tinger.cache.couchbase;
 
-import com.couchbase.client.java.Collection;
-import com.couchbase.client.java.json.JsonArray;
-import com.couchbase.client.java.kv.GetResult;
-import com.couchbase.client.java.kv.MutationResult;
-import com.couchbase.client.java.kv.UpsertOptions;
-import org.tinger.common.codec.TingerTranslator;
-import org.tinger.common.codec.Translator;
 import org.tinger.core.cache.CacheDriver;
 import org.tinger.core.cache.CacheProvider;
 import org.tinger.core.func.Call;
 
-import java.time.Instant;
 import java.util.Date;
 
 /**
  * Created by tinger on 2022-11-13
  */
 public class CouchbaseProvider implements CacheProvider {
-    private final Translator tingerTranslator = new TingerTranslator();
 
-    private Collection collection;
 
-    public CouchbaseProvider(Collection collection) {
-        this.collection = collection;
+
+    public CouchbaseProvider(String server, String username, String password) {
+
     }
 
     @Override
@@ -32,76 +23,62 @@ public class CouchbaseProvider implements CacheProvider {
     }
 
     @Override
-    public boolean ex(String s) {
-        return collection.exists(s).exists();
+    public boolean ex(String key) {
+        return false;
     }
 
     @Override
-    public boolean nx(String s) {
-        return !ex(s);
+    public boolean nx(String key) {
+        return false;
     }
 
     @Override
-    public Object get(String s) {
-        GetResult result = collection.get(s);
-        if (result == null) {
-            return null;
-        }
-        Instant instant = result.expiryTime().orElse(Instant.ofEpochSecond(0));
-        if (instant.isBefore(Instant.now())) {
-            return null;
-        }
-        byte[] bytes = result.contentAsBytes();
-        return tingerTranslator.decode(bytes);
+    public Object get(String key) {
+        return null;
     }
 
     @Override
-    public void put(String s, Object o) {
-        if(o == null){
-            MutationResult upsert = collection.upsert(s, o, UpsertOptions.upsertOptions());
-            return;
-        }
-
+    public void put(String key, Object value) {
 
     }
 
     @Override
-    public void put(String s, Object o, int i) {
+    public void put(String key, Object value, int expiry) {
 
     }
 
     @Override
-    public void put(String s, Object o, Date date) {
+    public void put(String key, Object value, Date expiry) {
 
     }
 
     @Override
-    public void exp(String s, int i) {
+    public void exp(String key, int expiry) {
 
     }
 
     @Override
-    public void exp(String s, Date date) {
+    public void exp(String key, Date date) {
 
     }
 
     @Override
-    public void del(String s) {
+    public void del(String key) {
 
     }
 
     @Override
-    public long incr(String s, long l, int i, int i1) {
+    public long incr(String key, long initial, int step, int expiry) {
         return 0;
     }
 
     @Override
-    public long decr(String s, long l, int i, int i1) {
+    public long decr(String key, long initial, int step, int expiry) {
         return 0;
     }
 
     @Override
-    public void lock(String s, int i, int i1, Call call) {
+    public void lock(String key, int timeout, int retry, Call call) {
 
     }
 }
