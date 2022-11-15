@@ -3,10 +3,11 @@ package org.tinger.cache.couchbase;
 import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.Collection;
-import com.couchbase.client.java.kv.MutationResult;
 import com.couchbase.client.java.kv.UpsertOptions;
 import org.tinger.common.codec.TingerTranslator;
 import org.tinger.common.codec.Translator;
+import org.tinger.common.utils.DateUnit;
+import org.tinger.common.utils.DateUtils;
 import org.tinger.core.cache.CacheDriver;
 import org.tinger.core.cache.CacheProvider;
 import org.tinger.core.func.Call;
@@ -14,7 +15,6 @@ import org.tinger.core.func.Call;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.Date;
 
 /**
@@ -43,17 +43,18 @@ public class CouchbaseProvider implements CacheProvider {
 
     @Override
     public boolean ex(String key) {
-        return false;
+        return this.collection.exists(key).exists();
     }
 
     @Override
     public boolean nx(String key) {
-        return false;
+        return !ex(key);
     }
 
     @Override
     public Object get(String key) {
-        return null;
+        byte[] bytes = this.collection.get(key).contentAsBytes();
+        return translator.decode(bytes);
     }
 
     @Override
@@ -82,17 +83,23 @@ public class CouchbaseProvider implements CacheProvider {
 
     @Override
     public void exp(String key, int expiry) {
-
+        Duration duration = Duration.of(expiry, ChronoUnit.SECONDS);
+        exp(key, duration);
     }
 
     @Override
     public void exp(String key, Date date) {
+        long between = DateUtils.between(date, new Date(), DateUnit.SECOND);
+        exp(key, (int) between);
+    }
 
+    private void exp(String key, Duration duration) {
+        this.collection.touch(key, duration);
     }
 
     @Override
     public void del(String key) {
-
+        this.collection.remove(key);
     }
 
     @Override
@@ -107,6 +114,5 @@ public class CouchbaseProvider implements CacheProvider {
 
     @Override
     public void lock(String key, int timeout, int retry, Call call) {
-
     }
 }
