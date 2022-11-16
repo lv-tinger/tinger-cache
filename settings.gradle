@@ -1,3 +1,3 @@
 rootProject.name = 'tinger-cache'
 
-include ':tinger-cache-couchbase'
+include ':tinger-cache-redis'
