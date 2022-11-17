@@ -11,7 +11,7 @@ import java.nio.ByteBuffer;
  * Created by tinger on 2022-11-17
  */
 public class TingerRedisCodec implements RedisCodec<String, Object> {
-    private Translator translator = new TingerTranslator();
+    private final Translator translator = new TingerTranslator();
 
     @Override
     public String decodeKey(ByteBuffer bytes) {
