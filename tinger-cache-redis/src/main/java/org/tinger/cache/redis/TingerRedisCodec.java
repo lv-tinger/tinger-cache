@@ -20,7 +20,9 @@ public class TingerRedisCodec implements RedisCodec<String, Object> {
 
     @Override
     public Object decodeValue(ByteBuffer bytes) {
-        return translator.decode(bytes.array());
+        byte[] bs = new byte[bytes.remaining()];
+        bytes.get(bs);
+        return translator.decode(bs);
     }
 
     @Override
@@ -30,6 +32,7 @@ public class TingerRedisCodec implements RedisCodec<String, Object> {
 
     @Override
     public ByteBuffer encodeValue(Object value) {
-        return translator.encodeByteBuff(value);
+        byte[] bytes = translator.encode(value);
+        return ByteBuffer.wrap(bytes);
     }
 }
