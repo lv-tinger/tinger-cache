@@ -1,3 +1,5 @@
 dependencies {
-    implementation 'io.lettuce:lettuce-core:6.2.1.RELEASE'
+    api project(':tinger-cache-core')
+    api 'io.lettuce:lettuce-core:6.2.1.RELEASE'
+
 }

@@ -1,3 +1,4 @@
 rootProject.name = 'tinger-cache'
 
+include ':tinger-cache-core'
 include ':tinger-cache-redis'

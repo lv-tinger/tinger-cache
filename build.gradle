@@ -21,6 +21,7 @@ subprojects {
 
     apply plugin: 'java'
     apply plugin: 'maven-publish'
+    apply plugin: 'java-library'
 
     group 'org.tinger'
     version '1.0-SNAPSHOT'
@@ -37,8 +38,13 @@ subprojects {
     }
 
     dependencies {
-        implementation "org.tinger:tinger-core:${tinger_version}"
-        implementation "org.tinger:tinger-common:${tinger_version}"
+        api "org.tinger:tinger-core:${version}"
+        api "org.tinger:tinger-common:${version}"
+
+        implementation "org.projectlombok:lombok:${lombok_version}"
+        annotationProcessor "org.projectlombok:lombok:${lombok_version}"
+        testImplementation "org.projectlombok:lombok:${lombok_version}"
+        testAnnotationProcessor "org.projectlombok:lombok:${lombok_version}"
     }
 
     task sourceJar(type: Jar) {
